@@ -1,19 +1,19 @@
+// buildcript 定义 gradle 自身的配置
+//buildscript {}
 plugins {
-    id 'org.springframework.boot' version '2.6.6'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'idea'
+    id 'org.springframework.boot' version "${springBootVersion}" apply false
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
-
 ext {
-    guavaVersion = '31.1'
+    guavaVersion = '31.1-jre'
     commonsLang3Version = '3.12.0'
     commonsCollections4Version = '4.4'
     mapstructVersion = '1.4.2.Final'
     lombokMapstructVersion = '0.2.0'
     hutoolVersio = '5.7.22'
 }
-
 allprojects {
     java {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -21,33 +21,30 @@ allprojects {
     }
 
     repositories {
-        maven {
-            name = "maven center 和 jcenter 阿里云"
-            url = "https://maven.aliyun.com/repository/public"
-        }
-        maven {
-            name = "spring 阿里云"
-            url = "https://maven.aliyun.com/repository/spring"
-        }
-        maven {
-            url = "https://maven.aliyun.com/repository/spring-plugin"
-        }
-        maven {
-            url = "https://maven.aliyun.com/repository/gradle-plugin"
-        }
         mavenLocal()
+        maven {
+            name = 'maven center 和 jcenter 阿里云'
+            url = 'https://maven.aliyun.com/repository/public'
+        }
+        maven {
+            name = 'spring 阿里云'
+            url = 'https://maven.aliyun.com/repository/spring'
+        }
+        maven {
+            name = 'google 阿里云'
+            url = 'https://maven.aliyun.com/repository/google'
+        }
         mavenCentral()
     }
 }
 
 subprojects {
-    apply plugin: "java"
-    apply plugin: "idea"
-    apply plugin: "groovy"
+    apply plugin: 'java'
+    apply plugin: 'idea'
 
     configurations.all {
         resolutionStrategy {
-            cacheChangingModulesFor 0, "seconds"
+            cacheChangingModulesFor 0, 'seconds'
             force "org.apache.commons:commons-lang3:${commonsLang3Version}"
             force "org.apache.commons:commons-collections4:${commonsCollections4Version}"
             force "com.google.guava:guava:${guavaVersion}"
@@ -69,7 +66,6 @@ subprojects {
         implementation 'cn.hutool:hutool-all'
         implementation 'org.apache.commons:commons-collections4'
         implementation 'com.google.guava:guava'
-        implementation 'org.springdoc:springdoc-openapi-ui'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
@@ -85,6 +81,7 @@ subprojects {
 }
 
 wrapper {
-    gradleVersion = "7.4.1"
+    gradleVersion = '7.4.1'
 }
+
 apply from: "${rootProject.projectDir}/gradle/git-hooks/git-hooks.gradle"

@@ -1,1 +1,15 @@
+// 配置gradle 插件从哪里下载和来源
+pluginManagement {
+    repositories {
+        mavenLocal()
+        maven {
+            url = 'https://maven.aliyun.com/repository/gradle-plugin'
+        }
+        maven {
+            url = 'https://maven.aliyun.com/repository/spring-plugin'
+        }
+        gradlePluginPortal()
+    }
+}
 rootProject.name = 'fly-java-cache'
+include 'spring-cache'
