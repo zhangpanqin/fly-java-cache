@@ -34,6 +34,7 @@ public class RedisCachingConfig {
                     RedisCacheConfiguration.defaultCacheConfig(resourceLoader.getClassLoader())
                             .serializeKeysWith(SerializationPair.fromSerializer(new StringRedisSerializer()))
                             .serializeValuesWith(SerializationPair.fromSerializer(jackson2JsonRedisSerializer))
+//                            .disableCachingNullValues()
                             .entryTtl(Duration.ZERO));
             //
             redisCacheManagerBuilder.cacheDefaults(redisCacheConfiguration);
