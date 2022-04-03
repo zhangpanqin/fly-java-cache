@@ -1,1 +1,9 @@
-
+spring:
+  redis:
+    host: localhost
+    port: 6379
+  cache:
+    type: redis
+    redis:
+      key-prefix: 'FLY_JAVA_CACHE::'
+      time-to-live: 30m

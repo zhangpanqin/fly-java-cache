@@ -12,7 +12,8 @@ ext {
     commonsCollections4Version = '4.4'
     mapstructVersion = '1.4.2.Final'
     lombokMapstructVersion = '0.2.0'
-    hutoolVersio = '5.7.22'
+    hutoolVersion = '5.7.22'
+    commonsPool2Version='2.11.1'
 }
 allprojects {
     java {
@@ -48,7 +49,8 @@ subprojects {
             force "org.apache.commons:commons-lang3:${commonsLang3Version}"
             force "org.apache.commons:commons-collections4:${commonsCollections4Version}"
             force "com.google.guava:guava:${guavaVersion}"
-            force "cn.hutool:hutool-all:${hutoolVersio}"
+            force "cn.hutool:hutool-all:${hutoolVersion}"
+            force "org.apache.commons:commons-pool2:${commonsPool2Version}"
         }
     }
 
