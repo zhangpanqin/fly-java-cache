@@ -1,0 +1,5 @@
+#!/bin/sh
+set -xeo pipefail
+echo Run gradle check before push to remote repository...
+
+./gradlew clean check

@@ -2,32 +2,89 @@ plugins {
     id 'org.springframework.boot' version '2.6.6'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'idea'
 }
 
-group = 'com.mflyyou'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+ext {
+    guavaVersion = '31.1'
+    commonsLang3Version = '3.12.0'
+    commonsCollections4Version = '4.4'
+    mapstructVersion = '1.4.2.Final'
+    lombokMapstructVersion = '0.2.0'
+    hutoolVersio = '5.7.22'
+}
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+allprojects {
+    java {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    repositories {
+        maven {
+            name = "maven center 和 jcenter 阿里云"
+            url = "https://maven.aliyun.com/repository/public"
+        }
+        maven {
+            name = "spring 阿里云"
+            url = "https://maven.aliyun.com/repository/spring"
+        }
+        maven {
+            url = "https://maven.aliyun.com/repository/spring-plugin"
+        }
+        maven {
+            url = "https://maven.aliyun.com/repository/gradle-plugin"
+        }
+        mavenLocal()
+        mavenCentral()
     }
 }
 
-repositories {
-    mavenCentral()
+subprojects {
+    apply plugin: "java"
+    apply plugin: "idea"
+    apply plugin: "groovy"
+
+    configurations.all {
+        resolutionStrategy {
+            cacheChangingModulesFor 0, "seconds"
+            force "org.apache.commons:commons-lang3:${commonsLang3Version}"
+            force "org.apache.commons:commons-collections4:${commonsCollections4Version}"
+            force "com.google.guava:guava:${guavaVersion}"
+            force "cn.hutool:hutool-all:${hutoolVersio}"
+        }
+    }
+
+    configurations {
+        parentBom
+        runtimeOnly.extendsFrom(parentBom)
+        compileOnly.extendsFrom(parentBom)
+        annotationProcessor.extendsFrom(parentBom)
+        implementation.extendsFrom(parentBom)
+    }
+
+    dependencies {
+        parentBom platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+        implementation 'org.apache.commons:commons-lang3'
+        implementation 'cn.hutool:hutool-all'
+        implementation 'org.apache.commons:commons-collections4'
+        implementation 'com.google.guava:guava'
+        implementation 'org.springdoc:springdoc-openapi-ui'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
+        annotationProcessor 'org.projectlombok:lombok'
+        annotationProcessor "org.projectlombok:lombok-mapstruct-binding:$lombokMapstructVersion"
+        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    }
+
+
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+wrapper {
+    gradleVersion = "7.4.1"
 }
-
-tasks.named('test') {
-    useJUnitPlatform()
-}
+apply from: "${rootProject.projectDir}/gradle/git-hooks/git-hooks.gradle"
